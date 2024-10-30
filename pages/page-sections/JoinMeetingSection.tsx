@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import crypto from "crypto";
+import CryptoJS from "crypto-js";
 
 interface Message {
   action: string;
@@ -38,10 +38,10 @@ const JoinMeetingSection: React.FC<JoinMeetingSectionProps> = ({
   const unixTimestamp = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // Valid for 24 hours
   const username = unixTimestamp.toString();
 
-  // Generate the HMAC-SHA1 password using the static-auth-secret
-  const hmac = crypto.createHmac("sha1", staticAuthSecret);
-  hmac.update(username);
-  const password = hmac.digest("base64");
+  // Generate the HMAC-SHA1 password using the static-auth-secret with crypto-js
+  const password = CryptoJS.HmacSHA1(username, staticAuthSecret).toString(
+    CryptoJS.enc.Base64
+  );
 
   // Now use the generated `username` and `password` in the RTC configuration
   const peerConnectionConfig: RTCConfiguration = {

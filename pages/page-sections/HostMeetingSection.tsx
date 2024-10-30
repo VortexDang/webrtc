@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import crypto from "crypto";
+import CryptoJS from "crypto-js";
 
 interface Message {
   action: string;
@@ -13,7 +13,12 @@ interface Message {
 }
 
 const generateUniqueId = (): string => {
-  return crypto.randomUUID();
+  // Simple UUID generator (you can replace with uuid library as needed)
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+    const r = (Math.random() * 16) | 0,
+      v = c === "x" ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
 };
 
 interface HostMeetingSectionProps {
@@ -42,10 +47,10 @@ const HostMeetingSection: React.FC<HostMeetingSectionProps> = ({
   const unixTimestamp = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // Valid for 24 hours
   const username = unixTimestamp.toString();
 
-  // Generate the HMAC-SHA1 password using the static-auth-secret
-  const hmac = crypto.createHmac("sha1", staticAuthSecret);
-  hmac.update(username);
-  const password = hmac.digest("base64");
+  // Generate the HMAC-SHA1 password using the static-auth-secret with crypto-js
+  const password = CryptoJS.HmacSHA1(username, staticAuthSecret).toString(
+    CryptoJS.enc.Base64
+  );
 
   // Now use the generated `username` and `password` in the RTC configuration
   const peerConnectionConfig: RTCConfiguration = {
