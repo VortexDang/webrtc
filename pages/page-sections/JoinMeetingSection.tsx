@@ -32,7 +32,14 @@ const JoinMeetingSection: React.FC<JoinMeetingSectionProps> = ({
   }
 
   const peerConnectionConfig: RTCConfiguration = {
-    iceServers: [{ urls: process.env.NEXT_PUBLIC_ICE_SERVERS_URL }],
+    iceServers: [
+      { urls: process.env.NEXT_PUBLIC_ICE_SERVERS_URL },
+      {
+        urls: "turn:54.163.59.219:3478",
+        username: "user",
+        credential: "north",
+      },
+    ],
   };
 
   let localStream: MediaStream | null = null;
