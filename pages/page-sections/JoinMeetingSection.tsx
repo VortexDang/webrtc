@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-
-const CryptoJS = require("crypto-js");
+import CryptoJS from "crypto-js";
 
 interface Message {
   action: string;
