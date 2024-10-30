@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import crypto from "crypto";
 
 interface Message {
   action: string;
@@ -35,13 +36,25 @@ const HostMeetingSection: React.FC<HostMeetingSectionProps> = ({
     );
   }
 
+  const staticAuthSecret = "north";
+
+  // Generate a username as a Unix timestamp (e.g., valid for 24 hours)
+  const unixTimestamp = Math.floor(Date.now() / 1000) + 24 * 60 * 60; // Valid for 24 hours
+  const username = unixTimestamp.toString();
+
+  // Generate the HMAC-SHA1 password using the static-auth-secret
+  const hmac = crypto.createHmac("sha1", staticAuthSecret);
+  hmac.update(username);
+  const password = hmac.digest("base64");
+
+  // Now use the generated `username` and `password` in the RTC configuration
   const peerConnectionConfig: RTCConfiguration = {
     iceServers: [
       { urls: process.env.NEXT_PUBLIC_ICE_SERVERS_URL },
       {
         urls: "turn:54.163.59.219:3478",
-        username: "user",
-        credential: "north",
+        username: username, // Dynamic username based on timestamp
+        credential: password, // HMAC-SHA1 hash as the password
       },
     ],
   };
