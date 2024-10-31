@@ -48,7 +48,7 @@ const JoinMeetingSection: React.FC<JoinMeetingSectionProps> = ({
     iceServers: [
       { urls: process.env.NEXT_PUBLIC_ICE_SERVERS_URL },
       {
-        urls: "turn:54.163.59.219:3478",
+        urls: "turn:54.89.34.2:3478",
         username: username, // Dynamic username based on timestamp
         credential: password, // HMAC-SHA1 hash as the password
       },
